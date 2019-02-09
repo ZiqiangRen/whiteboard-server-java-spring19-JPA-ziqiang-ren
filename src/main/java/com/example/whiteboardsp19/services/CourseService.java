@@ -2,6 +2,7 @@ package com.example.whiteboardsp19.services;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -33,10 +34,15 @@ public class CourseService {
 		courses.add(cs5610);
 	}
 	
-	@DeleteMapping("/api/courses/{courseId}")
-	public void deleteCourse(@PathVariable("courseId") Integer id) {
-		
+	@DeleteMapping("/api/course/{id}")
+	public List<Course> deleteCourse(
+			@PathVariable("id") int courseId) {
+		courses = courses.stream()
+					.filter(course -> course.getId() != courseId)
+					.collect(Collectors.toList());
+		return courses;
 	}
+	
 	
 	@PutMapping("/api/courses/{courseId}")
 	public Course updateCourse(
@@ -54,6 +60,7 @@ public class CourseService {
 	@PostMapping("/api/courses")
 	public List<Course> createCourse(
 			@RequestBody Course course) {
+		course.setId((int)(Math.random() * 1000));
 		courses.add(course);
 		return courses;
 	}
