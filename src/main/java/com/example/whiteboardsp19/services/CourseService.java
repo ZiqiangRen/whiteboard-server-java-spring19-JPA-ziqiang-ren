@@ -19,20 +19,27 @@ import com.example.whiteboardsp19.model.Module;
 
 @RestController
 public class CourseService {
-	Course cs5610 = new Course(123, "CS5610");
-	Course cs4500 = new Course(234, "CS4500");
-	Module cs4500W1 = new Module(123, "Week 1");
-	Module cs4500W2 = new Module(234, "Week 2");
-	//Course[] courses = {cs5610, cs4500};
+	private static CourseService instance = new CourseService();
 	List<Course> courses = new ArrayList<Course>();
-	List<Module> cs4500Modules = new ArrayList<Module>();
-	{
-		cs4500Modules.add(cs4500W1);
-		cs4500Modules.add(cs4500W2);
-		cs4500.setModules(cs4500Modules);
-		courses.add(cs4500);
-		courses.add(cs5610);
+	private CourseService() {
+		Course cs5610 = new Course(123, "CS5610");
+		Course cs4500 = new Course(234, "CS4500");
+		Module cs4500W1 = new Module(123, "Week 1");
+		Module cs4500W2 = new Module(234, "Week 2");
+		//Course[] courses = {cs5610, cs4500};
+		List<Module> cs4500Modules = new ArrayList<Module>();
+		{
+			cs4500Modules.add(cs4500W1);
+			cs4500Modules.add(cs4500W2);
+			cs4500.setModules(cs4500Modules);
+			courses.add(cs4500);
+			courses.add(cs5610);
+		}
 	}
+
+ public static CourseService getInstance(){
+      return instance;
+   }
 	
 	@DeleteMapping("/api/courses/{id}")
 	public List<Course> deleteCourse(

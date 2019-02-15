@@ -6,6 +6,11 @@ public class Lesson {
 	  private int id;
 	  private String title;
 	  private List<Topic> topics;
+	public Lesson(Integer id, String title) {
+		super();
+		this.id = id;
+		this.title = title;
+	}
 	public int getId() {
 		return id;
 	}
