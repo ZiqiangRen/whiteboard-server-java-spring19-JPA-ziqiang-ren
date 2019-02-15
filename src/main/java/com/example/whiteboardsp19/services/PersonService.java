@@ -60,20 +60,24 @@ public class PersonService {
 			return currentUser;
 		}
 
-		@PostMapping("/api/login")
-		public Person login(@RequestBody Person credentials,
-							HttpSession session) {
-		 for (Person user : persons) {
-		  if( user.getUsername().equals(credentials.getUsername())
-		   && user.getPassword().equals(credentials.getPassword())) {
-		    session.setAttribute("currentUser", user);
-		    return user;
-		  }
-		 }
-		 return null;
-		}
+	@PostMapping("/api/login")
+	public Person login(@RequestBody Person credentials,
+						HttpSession session) {
+	 for (Person user : persons) {
+	  if( user.getUsername().equals(credentials.getUsername())
+	   && user.getPassword().equals(credentials.getPassword())) {
+	    session.setAttribute("currentUser", user);
+	    return user;
+	  }
+	 }
+	 return null;
+	}
 
-	  
+	@PostMapping("/api/logout")
+		public void logout(HttpSession session) {
+			session.invalidate();
+		}
+  
 	  @DeleteMapping("/api/user/{PersonId}")
 	  public void deletePerson(@PathVariable("PersonId") Integer id) {
 			for(Person Person: persons) {
