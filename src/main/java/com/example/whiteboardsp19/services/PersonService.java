@@ -26,6 +26,7 @@ public class PersonService {
 
 
     public Person createPerson(Person newPerson) {
+    	newPerson.setId((int) (Math.random() * 10000));
         persons.add(newPerson);
         return newPerson;
     }
