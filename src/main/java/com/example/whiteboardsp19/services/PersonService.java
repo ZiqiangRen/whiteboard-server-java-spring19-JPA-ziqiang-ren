@@ -37,6 +37,7 @@ public class PersonService {
     		 return null;
     	 }
     	}
+    	person.setId((int) (Math.random() * 10000));
         persons.add(person);
         return person;
     }
