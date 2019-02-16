@@ -31,6 +31,11 @@ public class PersonService {
     }
 
     public Person register(Person person) {
+    	for (Person Person : persons) {
+    	 if(Person.getUsername().equals(person.getUsername())) {
+    		 return null;
+    	 }
+    	}
         persons.add(person);
         return person;
     }
