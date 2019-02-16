@@ -1,11 +1,12 @@
 package com.example.whiteboardsp19.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Module {
 	private Integer id;
 	private String title;
-	private List<Lesson> lessons;
+	private List<Lesson> lessons = new ArrayList<Lesson>();
 	public Module(Integer id, String title) {
 		super();
 		this.id = id;

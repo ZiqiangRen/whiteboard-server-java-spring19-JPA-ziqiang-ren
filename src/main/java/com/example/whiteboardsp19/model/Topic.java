@@ -1,15 +1,21 @@
 package com.example.whiteboardsp19.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Topic {
-	  private int id;
+	  private Integer id;
 	  private String title;
-	  private List<Widget> widgets;
-	public int getId() {
+	  private List<Widget> widgets = new ArrayList<Widget>();
+	public Topic(Integer id, String title) {
+		super();
+		this.id = id;
+		this.title = title;
+	}
+	public Integer getId() {
 		return id;
 	}
-	public void setId(int id) {
+	public void setId(Integer id) {
 		this.id = id;
 	}
 	public String getTitle() {
