@@ -44,8 +44,7 @@ public class PersonController {
 
     @PostMapping("/api/register")
     public Person register(@RequestBody Person person, HttpSession session) {
-        session.setAttribute("currentUser", person);
-        return personService.register(person);
+        return personService.register(person, session);
     }
 
     @GetMapping("/api/profile")

@@ -1,5 +1,5 @@
 package com.example.whiteboardsp19.services;
-
+import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,7 +31,7 @@ public class PersonService {
         return newPerson;
     }
 
-    public Person register(Person person) {
+    public Person register(Person person, HttpSession session) {
     	for (Person Person : persons) {
     	 if(Person.getUsername().equals(person.getUsername())) {
     		 person.setId((int)-1);
@@ -40,6 +40,7 @@ public class PersonService {
     	}
     	person.setId((int) (Math.random() * 10000));
         persons.add(person);
+        session.setAttribute("currentUser", person);
         return person;
     }
 
