@@ -4,10 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.CrossOrigin;
 
 import com.example.whiteboardsp19.model.Person;
 
 @Service
+@CrossOrigin(origins = "http://localhost:3000", allowCredentials="true")
 public class PersonService {
 
     private ArrayList<Person> persons = new ArrayList<>();
