@@ -62,7 +62,8 @@ public class PersonController {
                 return user;
             }
         }
-        return null;
+        Person dummy = new Person(-1,"", "", "", "", "");
+        return dummy;
     }
 
     @PostMapping("/api/logout")
