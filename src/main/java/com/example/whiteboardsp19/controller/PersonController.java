@@ -5,6 +5,7 @@ import java.util.List;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -17,6 +18,7 @@ import com.example.whiteboardsp19.model.Person;
 import com.example.whiteboardsp19.services.PersonService;
 
 @RestController
+@CrossOrigin(origins = "*", allowCredentials="true",allowedHeaders = "*")
 public class PersonController {
 
     private final PersonService personService;
