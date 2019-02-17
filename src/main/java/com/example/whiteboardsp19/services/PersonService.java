@@ -34,7 +34,8 @@ public class PersonService {
     public Person register(Person person) {
     	for (Person Person : persons) {
     	 if(Person.getUsername().equals(person.getUsername())) {
-    		 return null;
+    		 person.setId((int)-1);
+    		 return person;
     	 }
     	}
     	person.setId((int) (Math.random() * 10000));
