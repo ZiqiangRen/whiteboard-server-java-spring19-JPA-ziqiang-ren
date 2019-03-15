@@ -1,24 +1,18 @@
 package com.example.whiteboardsp19.model;
+import javax.persistence.*;
 
-import java.util.ArrayList;
-import java.util.List;
 
+@Entity
 public class Person {
-	private Integer id;
+	   @Id  
+	   @GeneratedValue(strategy=GenerationType.IDENTITY)
+	   private int id;
+	
 	private String username;
 	private String password;
 	private String firstname;
 	private String lastname;
 	private String role;
-	private List<Course> courses = new ArrayList<Course>();
-	public Person(Integer id, String password, String username, String firstname, String lastname, String role) {
-		this.id = id;
-		this.password = password;
-		this.username = username;
-		this.firstname = firstname;
-		this.lastname = lastname;
-		this.role = role;
-	}
 
 	public String getRole() {
 		return role;
@@ -27,7 +21,7 @@ public class Person {
 		this.role = role;
 	}
 
-	public Integer getId() {
+	public int getId() {
 		return id;
 	}
 	public void setId(Integer id) {
@@ -62,13 +56,6 @@ public class Person {
 		this.lastname = lastname;
 	}
 
-	public List<Course> getCourses() {
-		return courses;
-	}
-
-	public void setCourses(List<Course> courses) {
-		this.courses = courses;
-	}
 	
 }
 

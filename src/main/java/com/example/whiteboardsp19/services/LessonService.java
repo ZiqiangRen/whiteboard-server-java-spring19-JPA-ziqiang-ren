@@ -1,120 +1,71 @@
 package com.example.whiteboardsp19.services;
 
-import java.util.ArrayList;
 import java.util.List;
-
-import javax.annotation.PostConstruct;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
 
-import com.example.whiteboardsp19.model.Course;
 import com.example.whiteboardsp19.model.Lesson;
+import com.example.whiteboardsp19.repository.*;
+import com.example.whiteboardsp19.model.Course;
 import com.example.whiteboardsp19.model.Module;
+import com.example.whiteboardsp19.repository.LessonRepository;
 
-@Service
+@RestController
 public class LessonService {
-
-    private final CourseService courseService;
-    private final ModuleService moduleService;
-
-    private List<Lesson> lessons = new ArrayList<>();
-
-    @Autowired
-    public LessonService(CourseService courseService, ModuleService moduleService) {
-        this.courseService = courseService;
-        this.moduleService = moduleService;
+  @Autowired
+  LessonRepository lessonRepository;
+  @Autowired
+  ModuleRepository moduleRepository;
+  
+  @PostMapping("/api/modules/{mid}/lesson")
+  public List<Lesson> createLesson(@PathVariable("mid") Integer mId, @RequestBody Lesson lesson) {
+	  Module module = moduleRepository.findById(mId).orElse(null);
+	  lesson.setModule(module);
+	  moduleRepository.save(module);
+	  lessonRepository.save(lesson);
+	  return module.getLessons();
+  }
+  
+  @PutMapping("/api/lessons/{lessonId}")
+  public Lesson updatelesson(@PathVariable("lessonId") int lId, @RequestBody Lesson newlesson) { // update
+	  Lesson tmp = lessonRepository.findById(lId).orElse(null);
+	  tmp.setTitle(newlesson.getTitle());
+	  tmp.setTopics(newlesson.getTopics());
+	  return lessonRepository.save(tmp);
+  }  
+  
+  @GetMapping("/api/lessons/{lessonId}/module")
+	public Module findParentModule(@PathVariable("lessonId") int lId) { // get parent
+	  Lesson lesson = lessonRepository.findById(lId).orElse(null);
+		return lesson.getModule();
+	}
+  
+	@DeleteMapping("/api/lessons/{lessonId}")
+	public void deleteLesson(@PathVariable("lessonId") int lId) { // delete
+		lessonRepository.deleteById(lId);
+	}
+	
+    @GetMapping("/api/modules/{mid}/lesson")
+    public List<Lesson> findAllLessons(@PathVariable("mid") Integer mId) {
+    	Module module = moduleRepository.findById(mId).orElse(null);
+    	return module.getLessons();
     }
+    
+    @GetMapping("/api/lessons/{lessonId}")
+    public Optional<Lesson> findlessonById(@PathVariable("lessonId") int lId) { // find one
+        return lessonRepository.findById(lId);
+    }    
+  
+  
 
-    @PostConstruct
-    public void init() {
-//        Module cs4500Module1 = new Module(9123, "Module 1");
-//        Module cs4500Module2 = new Module(9234, "Module 2");
-//        Lesson lesson1 = new Lesson(1232, "Lesson1");
-//        Lesson lesson2 = new Lesson(2342, "Lesson1");
-//
-//        List<Lesson> module1Lessons = new ArrayList<>();
-//        module1Lessons.add(lesson1);
-//        module1Lessons.add(lesson2);
-//        cs4500Module1.setLessons(module1Lessons);
-//        modules.add(cs4500Module1);
-//        modules.add(cs4500Module2);
-    }
-
-    public List<Lesson> deleteLesson(Integer id) {
-    	List<Course> allCourses = courseService.findAllCourses();
-    	for (int i=0; i<allCourses.size(); ++i) {
-    		List<Module> curModules = allCourses.get(i).getModules();
-	        for (int j=0; j<curModules.size(); ++j) {
-	        	List<Lesson> curLessons = curModules.get(j).getLessons();
-	        	for(int k=0; k<curLessons.size(); ++k) {
-	            if (curLessons.get(k).getId().equals(id)) {
-	            	curLessons.remove(k);
-	            	allCourses.get(i).getModules().get(j).setLessons(curLessons);
-	                return curLessons;
-	            }
-	        }
-	        }
-    	}
-    	return null;
-    }
-
-
-    public Lesson updateLesson(Integer id, Lesson newLesson) {
-    	List<Course> allCourses = courseService.findAllCourses();
-    	for (int i=0; i<allCourses.size(); ++i) {
-    		List<Module> curModules = allCourses.get(i).getModules();
-	        for (int j=0; j<curModules.size(); ++j) {
-	        	List<Lesson> curLessons = curModules.get(j).getLessons();
-	        	for(int k=0; k<curLessons.size(); ++k) {
-	            if (curLessons.get(k).getId().equals(id)) {
-	            	allCourses.get(i).getModules().get(j).getLessons().get(k).setTopics(newLesson.getTopics());
-	            	allCourses.get(i).getModules().get(j).getLessons().get(k).setTitle(newLesson.getTitle());
-	                return allCourses.get(i).getModules().get(j).getLessons().get(k);
-	            }
-	        }
-	        }
-    	}
-    	return null;
-    }
-
-    public List<Lesson> createLesson(Integer mid, Lesson lesson) {
-    	List<Course> allCourses = courseService.findAllCourses();
-    	for (int i=0; i<allCourses.size(); ++i) {
-    		List<Module> curModules = allCourses.get(i).getModules();
-	        for (int j=0; j<curModules.size(); ++j) {
-	            if (curModules.get(j).getId().equals(mid)) {
-	            	List<Lesson> curLessons = curModules.get(j).getLessons();
-	            	lesson.setId((int) (Math.random() * 10000));
-	            	System.out.println(allCourses.get(i).getModules().get(j));
-	            	curLessons.add(lesson);
-	            	allCourses.get(i).getModules().get(j).setLessons(curLessons);
-	            	return curLessons;
-	            }
-	        }
-    	}
-    	return null;
-    }
-
-    public List<Lesson> findAllLessons(Integer id) {
-    	System.out.println("hitdasdadasd");
-        return moduleService.findModuleById(id).getLessons();
-    }
-
-    public Lesson findLessonById(Integer id) {
-    	List<Course> allCourses = courseService.findAllCourses();
-    	for (int i=0; i<allCourses.size(); ++i) {
-    		List<Module> curModules = allCourses.get(i).getModules();
-	        for (int j=0; j<curModules.size(); ++j) {
-	        	List<Lesson> curLessons = curModules.get(j).getLessons();
-	        	for(int k=0; k<curLessons.size(); ++k) {
-	            if (curLessons.get(k).getId().equals(id)) {
-	            	return curLessons.get(k);
-	            }
-	        }
-	        }
-    	}
-    	return null;
-    }
+  
 
 }

@@ -1,101 +1,71 @@
 package com.example.whiteboardsp19.services;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
-
-import javax.annotation.PostConstruct;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
 
-import com.example.whiteboardsp19.model.Course;
-import com.example.whiteboardsp19.model.Lesson;
 import com.example.whiteboardsp19.model.Module;
+import com.example.whiteboardsp19.model.Topic;
+import com.example.whiteboardsp19.repository.CourseRepository;
+import com.example.whiteboardsp19.model.Course;
+import com.example.whiteboardsp19.repository.ModuleRepository;
 
-@Service
+@RestController
 public class ModuleService {
-
-    private final CourseService courseService;
-
-    private List<Module> modules = new ArrayList<>();
-
-    @Autowired
-    public ModuleService(CourseService courseService) {
-        this.courseService = courseService;
+  @Autowired
+  ModuleRepository moduleRepository;
+  @Autowired
+  CourseRepository courseRepository;
+  
+  @PostMapping("/api/courses/{cid}/modules")
+  public List<Module> createModule(@PathVariable("cid") Integer cId, @RequestBody Module module) {
+	  Course course = courseRepository.findById(cId).orElse(null);
+	  module.setCourse(course);
+	  courseRepository.save(course);
+	  moduleRepository.save(module);
+	  return course.getModules();
+  }
+  
+  @PutMapping("/api/modules/{moduleId}")
+  public Module updatemodule(@PathVariable("moduleId") int mId, @RequestBody Module newmodule) { // update
+	  Module tmp = moduleRepository.findById(mId).orElse(null);
+	  tmp.setTitle(newmodule.getTitle());
+	  tmp.setLessons(newmodule.getLessons());
+	  return moduleRepository.save(tmp);
+  }  
+  
+  @GetMapping("/api/modules/{moduleId}/course")
+	public Course findParentCourse(@PathVariable("moduleId") int mId) { // get parent
+	  Module module = moduleRepository.findById(mId).orElse(null);
+		return module.getCourse();
+	}
+  
+	@DeleteMapping("/api/modules/{moduleId}")
+	public void deleteModule(@PathVariable("moduleId") int mId) { // delete
+		moduleRepository.deleteById(mId);
+	}
+	
+    @GetMapping("/api/courses/{cid}/modules")
+    public List<Module> findAllModules(@PathVariable("cid") Integer cId) {
+    	Course course = courseRepository.findById(cId).orElse(null);
+    	return course.getModules();
     }
+    
+    @GetMapping("/api/modules/{moduleId}")
+    public Optional<Module> findmoduleById(@PathVariable("moduleId") int mId) { // find one
+        return moduleRepository.findById(mId);
+    }    
+  
+  
 
-    @PostConstruct
-    public void init() {
-        Module cs4500Module1 = new Module(9123, "Module 1");
-        Module cs4500Module2 = new Module(9234, "Module 2");
-        Lesson lesson1 = new Lesson(1232, "Lesson1");
-        Lesson lesson2 = new Lesson(2342, "Lesson1");
-
-        List<Lesson> module1Lessons = new ArrayList<>();
-        module1Lessons.add(lesson1);
-        module1Lessons.add(lesson2);
-        cs4500Module1.setLessons(module1Lessons);
-        modules.add(cs4500Module1);
-        modules.add(cs4500Module2);
-    }
-
-    public List<Module> deleteModule(Integer mid) {
-    	List<Course> allCourses = courseService.findAllCourses();
-    	for (int i=0; i<allCourses.size(); ++i) {
-    		List<Module> curModules = allCourses.get(i).getModules();
-	        for (int j=0; j<curModules.size(); ++j) {
-	            if (curModules.get(j).getId().equals(mid)) {
-	            	curModules.remove(j);
-	            	allCourses.get(i).setModules(curModules);
-	                return curModules;
-	            }
-	        }
-    	}
-    	return null;
-    }
-
-
-    public Module updateModule(Integer mid, Module newModule) {
-    	List<Course> allCourses = courseService.findAllCourses();
-    	for (int i=0; i<allCourses.size(); ++i) {
-    		List<Module> curModules = allCourses.get(i).getModules();
-	        for (int j=0; j<curModules.size(); ++j) {
-	            if (curModules.get(j).getId().equals(mid)) {
-	            	allCourses.get(i).getModules().get(j).setLessons(newModule.getLessons());
-	            	allCourses.get(i).getModules().get(j).setTitle(newModule.getTitle());
-	                return allCourses.get(i).getModules().get(j);
-	            }
-	        }
-    	}
-    	return null;
-    }
-
-    public List<Module> createModule(Integer cid, Module module) {
-        Course curCourse = courseService.findCourseById(cid);
-        List<Module> curModules = curCourse.getModules();
-        module.setId((int) (Math.random() * 10000));
-        curModules.add(module);
-        curCourse.setModules(curModules);
-        courseService.updateCourse(cid, curCourse);
-        return curModules;
-    }
-
-    public List<Module> findAllModules(Integer cid) {
-        return courseService.findCourseById(cid).getModules();
-    }
-
-    public Module findModuleById(Integer mid) {
-    	List<Course> allCourses = courseService.findAllCourses();
-    	for (Course curCourse: allCourses) {
-    		List<Module> curModules = curCourse.getModules();
-	        for (Module module : curModules) {
-	            if (module.getId().equals(mid)) {
-	                return module;
-	            }
-	        }
-    	}
-    	return null;
-    }
+  
 
 }
