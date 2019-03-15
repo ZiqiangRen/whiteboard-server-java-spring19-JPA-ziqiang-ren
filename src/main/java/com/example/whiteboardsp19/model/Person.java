@@ -1,5 +1,7 @@
 package com.example.whiteboardsp19.model;
 
+import java.util.ArrayList;
+import java.util.List;
 
 public class Person {
 	private Integer id;
@@ -8,6 +10,7 @@ public class Person {
 	private String firstname;
 	private String lastname;
 	private String role;
+	private List<Course> courses = new ArrayList<Course>();
 	public Person(Integer id, String password, String username, String firstname, String lastname, String role) {
 		this.id = id;
 		this.password = password;
@@ -57,6 +60,14 @@ public class Person {
 	}
 	public void setLastname(String lastname) {
 		this.lastname = lastname;
+	}
+
+	public List<Course> getCourses() {
+		return courses;
+	}
+
+	public void setCourses(List<Course> courses) {
+		this.courses = courses;
 	}
 	
 }
