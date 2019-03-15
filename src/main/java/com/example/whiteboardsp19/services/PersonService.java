@@ -19,6 +19,7 @@ import com.example.whiteboardsp19.model.Person;
 import com.example.whiteboardsp19.repository.PersonRepository;
 
 @RestController
+@CrossOrigin(origins = "http://localhost:3000", allowCredentials="true")
 public class PersonService {
 	
 	@Autowired
