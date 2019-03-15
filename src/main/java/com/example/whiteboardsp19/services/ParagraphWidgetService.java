@@ -22,7 +22,6 @@ import com.example.whiteboardsp19.model.Module;
 import com.example.whiteboardsp19.model.Widget;
 
 @RestController
-@CrossOrigin(origins = "*", allowCredentials="true")
 public class ParagraphWidgetService {
 	  @Autowired
 	  TopicRepository topicRepository;

@@ -20,7 +20,6 @@ import com.example.whiteboardsp19.model.Course;
 import com.example.whiteboardsp19.repository.ModuleRepository;
 
 @RestController
-@CrossOrigin(origins = "*", allowCredentials="true")
 public class ModuleService {
   @Autowired
   ModuleRepository moduleRepository;

@@ -22,7 +22,6 @@ import com.example.whiteboardsp19.repository.CourseRepository;
 import com.example.whiteboardsp19.repository.FacultyRepository;
 
 @RestController
-@CrossOrigin(origins = "*", allowCredentials="true")
 public class FacultyService {
   @Autowired
   FacultyRepository facultyRepository;
