@@ -24,7 +24,7 @@ public class PersonService {
 	@Autowired
 	PersonRepository personRepository;
 	
-	@PostMapping("/register")
+	@PostMapping("api/register")
 	public Person register(@RequestBody Person user, HttpSession session) {
 		// create user
 		
@@ -35,13 +35,18 @@ public class PersonService {
 		return cu;
 	}
 	
-	@GetMapping("/profile")
+	@GetMapping("api/profile")
 	public Optional<Person> profile(HttpSession session) {
 		Person currentUser = (Person) session.getAttribute("currentUser");
 		return personRepository.findById(currentUser.getId());
 	}
 	
-	@PostMapping("/login")
+    @PostMapping("/api/logout")
+    public void logout(HttpSession session) {
+        session.invalidate();
+    }
+    
+	@PostMapping("api/login")
 	public Person login(@RequestBody Person user, HttpSession session) {
 		user = personRepository.findUserByCredentials(user.getUsername(), user.getPassword());
 		session.setAttribute("currentUser", user);
@@ -74,7 +79,7 @@ public class PersonService {
 		personRepository.deleteById(id);
 	}
 	
-	@GetMapping("/api/users")
+	@GetMapping("/api/user")
 	public List<Person> findAllUsers(@RequestParam
 	   (name="username", required=false) String uname)
 	{  if(uname != null) {
