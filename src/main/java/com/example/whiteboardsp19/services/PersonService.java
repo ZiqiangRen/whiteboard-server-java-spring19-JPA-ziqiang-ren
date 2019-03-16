@@ -50,7 +50,7 @@ public class PersonService {
 	@PostMapping("api/login")
 	public Person login(@RequestBody Person user, HttpSession session) {
 		user = personRepository.findUserByCredentials(user.getUsername(), user.getPassword());
-		session.setAttribute("currentUser", user);
+		if(user!=null) session.setAttribute("currentUser", user);
 		return user;
 	}
 
